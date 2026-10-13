@@ -1,0 +1,59 @@
+# breakcheck guards itself. Each check breaks one line its tests claim to
+# protect; CI runs `breakcheck run` so a refactor that makes a test stop
+# guarding its line turns the build red instead of staying quietly green.
+
+- name: an ambiguous match is refused
+  file: breakcheck.go
+  from: "case n > 1:"
+  to: "case n > 99:"
+  cmd: go test -count=1 -json ./...
+  format: go-json
+  timeout: 5m
+
+- name: a non-zero exit with no failing test is not red
+  file: breakcheck.go
+  from: "case m.Failures == 0:"
+  to: "case m.Failures < 0:"
+  cmd: go test -count=1 -json ./...
+  format: go-json
+  timeout: 5m
+
+- name: a stale JUnit report is deleted before the run
+  file: suite.go
+  from: "_ = os.Remove(report)"
+  to: "_ = os.Remove(report + \".kept\")"   # still compiles; removes the wrong file
+  cmd: go test -count=1 -json ./...
+  format: go-json
+  timeout: 5m
+
+- name: restore will not clobber an edit made during the run
+  file: journal.go
+  from: "case sum(cur) != j.MutatedSHA && !force:"
+  to: "case false:"
+  cmd: go test -count=1 -json ./...
+  format: go-json
+  timeout: 5m
+
+- name: a timeout kills the suite's whole process group
+  file: proc_unix.go
+  from: "Setpgid: true"
+  to: "Setpgid: false"
+  cmd: go test -count=1 -json ./...
+  format: go-json
+  timeout: 5m
+
+- name: TAP TODO lines are not failures
+  file: detect.go
+  from: "if !tapDirective.Match(line) {"
+  to: "if !tapDirective.Match(line) || true {"   # still compiles
+  cmd: go test -count=1 -json ./...
+  format: go-json
+  timeout: 5m
+
+- name: a Go build failure is not a failing test
+  file: detect.go
+  from: 'e.Action == "fail" && e.Test != ""'
+  to: 'e.Action == "fail"'
+  cmd: go test -count=1 -json ./...
+  format: go-json
+  timeout: 5m
