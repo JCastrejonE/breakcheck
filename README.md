@@ -93,14 +93,14 @@ This repository's own [`breakcheck.yaml`](breakcheck.yaml) breaks seven lines of
 ## Install
 
 ```
-go install github.com/OWNER/breakcheck/cmd/breakcheck@latest
+go install github.com/JCastrejonE/breakcheck/cmd/breakcheck@latest
 ```
 
 or download a binary from the releases page (Linux, macOS, Windows; amd64 and arm64).
 
 ## Why it exists
 
-breakcheck started as a 150-line bash script in a project built largely by AI coding agents. Its habit, "break every new guard once and watch it go red before trusting it", was the single most productive check in that project's defect record. It also failed three times in one day, and every failure was the harness: a break that silently did not apply, a restore through `git checkout` that deleted the fix under test, and a compile error read as a red test. The script was written to make those three impossible.
+breakcheck started as a 150-line bash script in [Launchpad](https://github.com/JCastrejonE/launchpad), a hosting product built largely by AI coding agents at Netlab. Its habit, "break every new guard once and watch it go red before trusting it", was the single most productive check in that project's defect record. It also failed three times in one day, and every failure was the harness: a break that silently did not apply, a restore through `git checkout` that deleted the fix under test, and a compile error read as a red test. The script was written to make those three impossible.
 
 Then the script had its own bug. Used in a comparison of agent setups, a test command that began with `cd` changed what the script's relative path pointed at, the restore failed silently, the script deleted its snapshot, and the file stayed mutated. That is the class of failure it existed to prevent. This Go version resolves paths up front, never evaluates your command in its own shell, verifies every write, and keeps the snapshot until the restore is proven.
 
@@ -120,4 +120,4 @@ Mutation-testing tools (Stryker, PIT, mutmut, go-mutesting, universalmutator) ge
 
 ## License
 
-MIT
+MIT. breakcheck was first written at [Netlab](https://netlab.mx), and is maintained by [Juan Carlos Castrejón](https://github.com/JCastrejonE).

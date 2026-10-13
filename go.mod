@@ -1,4 +1,4 @@
-module breakcheck
+module github.com/JCastrejonE/breakcheck
 
 go 1.24
 

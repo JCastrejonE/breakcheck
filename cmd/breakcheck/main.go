@@ -15,7 +15,7 @@ import (
 	"syscall"
 	"time"
 
-	"breakcheck"
+	"github.com/JCastrejonE/breakcheck"
 )
 
 var version = "dev"
