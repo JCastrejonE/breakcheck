@@ -11,6 +11,7 @@ import (
 	"io"
 	"os"
 	"os/signal"
+	"runtime/debug"
 	"strings"
 	"syscall"
 	"time"
@@ -18,7 +19,15 @@ import (
 	"github.com/JCastrejonE/breakcheck"
 )
 
+// version is set by the release build. A `go install` build has no ldflags,
+// so it falls back to the module version Go records in the binary.
 var version = "dev"
+
+func init() {
+	if bi, ok := debug.ReadBuildInfo(); ok && version == "dev" && bi.Main.Version != "" && bi.Main.Version != "(devel)" {
+		version = strings.TrimPrefix(bi.Main.Version, "v")
+	}
+}
 
 const usage = `breakcheck: prove a test guards a line of code.
 
