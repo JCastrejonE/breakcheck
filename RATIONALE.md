@@ -1,8 +1,9 @@
 # breakcheck — rationale
 
-Status: **analysis, pre-spec.** This document decides whether breakcheck should
-exist as a standalone Go tool. If the case below does not hold, we pick a
-different piece of Launchpad to extract.
+Status: **the decision record that led to v1**, written 2026-09-28 while breakcheck was still a bash
+script inside [Launchpad](https://github.com/JCastrejonE/launchpad). References to Launchpad's
+compliance registry rows and spec numbers point at records that are not included in its public
+snapshot. Every v1 condition in section 5 shipped.
 
 ## 1. The problem
 
